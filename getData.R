@@ -4,6 +4,7 @@
 # call library function
 library(httr2)
 library(tidyverse)
+library(purrr)
 
 
 # kept my token
@@ -24,12 +25,13 @@ test <- request(base.url.check) |>
 base.url <- "https://data.tmd.go.th/nwpapi/v1/forecast/location/hourly/at"
 
 
+
 json <- request(base.url) |> 
   req_auth_bearer_token(token) |>
   req_url_query(lat = 13.10, 
                 lon = 100.10,
                 fields = 'cond,tc,rh,rain',
-                date = "2024-10-05",
+                date = "2024-10-10",
                 hour = 0,
                 duration = 24, .multi = "explode") |>
   req_perform() |>
@@ -46,8 +48,20 @@ waeth <- json |> pluck(1, 1) |> pluck("forecasts") |> map_dfr(
     )
   }
 )
-  
-  
+
+
+
+
+# titles of films
+sharknados <- c(
+  "Sharknado", "Sharknado 2", "Sharknado 3",
+  "Sharknado 4", "Sharknado 5"
+)
+
+sharknados_df <- map(.x = sharknados, .f = omdb_api) |>
+  list_rbind()
+
+
 
 
 lat_element <- function(x) x[[1]]$location$lat
