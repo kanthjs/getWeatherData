@@ -19,7 +19,7 @@ getWeather <- function(province.th, amphoe.th, tambon.th) {
       amphoe = amphoe.th,
       tambon = tambon.th,
       fields = 'cond,tc,rh,rain',
-      date = "2024-10-12",
+      date = "2024-10-17",
       hour = 0,
       duration = 24,
       .multi = "explode"
