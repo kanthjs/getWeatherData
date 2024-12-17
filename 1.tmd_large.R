@@ -11,8 +11,13 @@ main.domain <- "https://hpc.tmd.go.th/static/csv/"
 # we need to specify the data you want to retrieve data
 #format 20240422"
 #this.time = "20241016"
-Date <- Sys.Date()
-today <- paste0(year(Date), month(Date), day(Date))
+Date <-  Sys.Date() - 1 
+
+Date <- Date |> as.Date(format = "%Y-%m-%d")
+#as.Date("01-01-2016", format = "%m-%d-%Y") 
+today <- paste0(format.Date(Date, "%Y"),
+                format.Date(Date, "%m"),
+                format.Date(Date, "%d"))
 
 #time at 1am in that day
 when <- "00"
@@ -22,7 +27,7 @@ d01.vars <- c("t2m", "rhum", "p3h")
 
 tmd.data.list <- list()
 
-for (i in 1:length(vars)) {
+for (i in 1:length(d01.vars)) {
   tmd.data.list[i] <- paste0(main.domain,
                              today,
                              when,
@@ -36,16 +41,19 @@ for (i in 1:length(vars)) {
 
 tmd.list <- tmd.data.list %>% map(read_csv)
 
-names(tmd.list) <- vars
+names(tmd.list) <- d01.vars
 
 weather <- list_rbind(tmd.list, names_to = "var")
 
 saveRDS(weather, file = paste0("weather_forecast_d01_", today, ".rds"))
 
+
+
 ### domain 2 #####
 tmd.data.list <- list()
 d02.vars <- c("t2m", "rhum", "p1h")
-for (i in 1:length(vars)) {
+
+for (i in 1:length(d02.vars)) {
   tmd.data.list[i] <- paste0(main.domain,
                              today,
                              when,
